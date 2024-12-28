@@ -1,0 +1,63 @@
+---
+- name: Install prerquest PostgreSQL
+  apt:
+    name:
+      - acl                           # Access control list utilities
+      - python3                       # Python 3
+      - python3-pip                   # Pip for Python 3
+      - gnupg
+      - python3-psycopg2
+    state: present
+    update_cache: yes
+
+- name: Import PostgreSQL GPG key
+  ansible.builtin.apt_key:
+    url: "https://www.postgresql.org/media/keys/ACCC4CF8.asc"
+    state: present
+
+- name: Add PostgreSQL repository
+  apt_repository:
+    repo: "deb http://apt.postgresql.org/pub/repos/apt {{ ansible_distribution_release | lower }}-pgdg main"
+    state: present
+    filename: "pgdg"
+
+- name: Update apt cache
+  apt:
+    update_cache: yes
+
+- name: Install PostgreSQL and contrib packages
+  apt:
+    name:
+      - "postgresql"
+      - "postgresql-contrib"
+    state: present
+
+- name: Start PostgreSQL service
+  service:
+    name: postgresql
+    state: started
+    enabled: yes
+
+- name: Create PostgreSQL role
+  become: yes
+  become_user: postgres  
+  postgresql_user:
+    name: "{{ postgresql_user }}"
+    password: "{{ postgresql_password }}"
+    state: present
+
+- name: Create PostgreSQL database
+  become: yes
+  become_user: postgres
+  postgresql_db:
+    name: "{{ postgresql_db }}"
+    owner: "{{ postgresql_user }}"
+    state: present
+
+- name: Grant all privileges on the database to the user
+  become: yes
+  become_user: postgres
+  postgresql_query:
+    db: "{{ postgresql_db }}"
+    query: "GRANT ALL PRIVILEGES ON DATABASE {{ postgresql_db }} TO {{ postgresql_user }};"
+

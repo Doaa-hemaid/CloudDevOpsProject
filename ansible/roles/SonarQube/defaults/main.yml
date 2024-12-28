@@ -1,0 +1,10 @@
+# Default values for SonarQube
+sonarqube_version: "24.12.0.100206"
+sonarqube_install_dir: "/opt/sonarqube"
+sonarqube_service_name: "sonarqube"
+sonarqube_user: "sonarqube"
+sonarqube_group: "sonarqube"
+sonarqube_db_url: "jdbc:postgresql://localhost:5432/sonarqube"
+sonarqube_db_username: "sonaruser"
+sonarqube_db_password: "your_password"
+

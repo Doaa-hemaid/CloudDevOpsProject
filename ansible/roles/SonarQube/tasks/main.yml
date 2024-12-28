@@ -1,0 +1,100 @@
+---
+- name: Download SonarQube
+  get_url:
+    url: "https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-{{ sonarqube_version }}.zip"
+    dest: "/tmp/sonarqube-{{ sonarqube_version }}.zip"
+    mode: '0644'
+
+- name: Unzip SonarQube
+  unarchive:
+    src: "/tmp/sonarqube-{{ sonarqube_version }}.zip"
+    dest: "/opt"
+    remote_src: yes
+    creates: "/opt/sonarqube"
+
+- name: Move SonarQube to the correct directory
+  command:
+    cmd: mv /opt/sonarqube-{{ sonarqube_version }} /opt/sonarqube
+  when: ansible_facts['distribution'] == "Ubuntu"  # This is just a check to ensure it's on an Ubuntu system, adjust based on your needs
+
+- name: Ensure SonarQube group exists
+  group:
+    name: sonarqube
+    state: present
+
+- name: Create system user for SonarQube
+  user:
+    name: "{{ sonarqube_user }}"
+    system: yes
+    group: "{{ sonarqube_group }}"
+    create_home: no
+    shell: "/bin/false"
+
+- name: Set ownership of SonarQube directory
+  file:
+    path: "{{ sonarqube_install_dir }}"
+    owner: "{{ sonarqube_user }}"
+    group: "{{ sonarqube_group }}"
+    recurse: yes
+
+- name: Configure SonarQube database connection
+  template:
+    src: "sonar.properties.j2"
+    dest: "{{ sonarqube_install_dir }}/conf/sonar.properties"
+    mode: '0644'
+
+- name: Configure SonarQube system limits
+  template:
+    src: "99-sonarqube.conf.j2"
+    dest: "/etc/security/limits.d/99-sonarqube.conf"
+    mode: '0644'
+
+- name: Set virtual memory limits
+  sysctl:
+    name: vm.max_map_count
+    value: "524288"
+    state: present
+    reload: yes
+
+- name: Reboot the system
+  reboot:
+    reboot_timeout: 600  # Timeout in seconds for the system to reboot
+
+- name: Create systemd service file for SonarQube
+  copy:
+    dest: "/etc/systemd/system/sonarqube.service"
+    content: |
+      [Unit]
+      Description=SonarQube service
+      After=syslog.target network.target
+
+      [Service]
+      Type=forking
+      ExecStart={{ sonarqube_install_dir }}/bin/linux-x86-64/sonar.sh start
+      ExecStop={{ sonarqube_install_dir }}/bin/linux-x86-64/sonar.sh stop
+      User={{ sonarqube_user }}
+      Group={{ sonarqube_group }}
+      PermissionsStartOnly=true
+      Restart=always
+      StandardOutput=syslog
+      LimitNOFILE=131072
+      LimitNPROC=8192
+      TimeoutStartSec=5
+      SuccessExitStatus=143
+
+      [Install]
+      WantedBy=multi-user.target
+    mode: '0644'
+
+- name: Reload systemd to apply changes
+  systemd:
+    daemon_reload: yes
+      
+- name: Start SonarQube service
+  systemd:
+    name: "{{ sonarqube_service_name }}"
+    enabled: yes
+    state: started
+  become: yes
+
+

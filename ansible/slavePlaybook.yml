@@ -1,0 +1,7 @@
+- hosts: slave
+  become: yes
+  roles:
+    # - Docker
+    # - OpenShift
+    # - postgresql
+     - SonarQube  

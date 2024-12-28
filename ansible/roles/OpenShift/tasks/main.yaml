@@ -1,0 +1,22 @@
+---
+- name: Update apt package index
+  apt:
+    update_cache: yes
+
+- name: Download OpenShift CLI
+  get_url:
+    url: "https://mirror.openshift.com/pub/openshift-v4/clients/ocp/stable/openshift-client-linux.tar.gz"
+    dest: /tmp/openshift-client-linux.tar.gz
+
+- name: Extract OpenShift CLI
+  unarchive:
+    src: /tmp/openshift-client-linux.tar.gz
+    dest: /usr/local/bin
+    remote_src: yes
+    creates: /usr/local/bin/oc
+
+- name: Make OpenShift CLI executable
+  file:
+    path: /usr/local/bin/oc
+    mode: '0755'
+

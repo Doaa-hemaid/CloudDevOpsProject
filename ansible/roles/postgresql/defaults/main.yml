@@ -1,0 +1,6 @@
+# Default values for PostgreSQL
+postgresql_version: "14"
+postgresql_db: "sonarqube"
+postgresql_user: "sonaruser"
+postgresql_password: "your_password"
+

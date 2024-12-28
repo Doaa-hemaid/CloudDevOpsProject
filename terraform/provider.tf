@@ -1,0 +1,17 @@
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 4.19.0"
+    }
+  }
+  
+}
+terraform {
+  backend "s3" {
+    bucket         = "ivolve-project-tfstate"
+    key            = "terraform.tfstate"
+    region         = "us-east-1"
+    dynamodb_table = "ivolve-project-tb"
+  }
+}

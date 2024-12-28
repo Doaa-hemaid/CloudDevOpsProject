@@ -1,0 +1,17 @@
+# commonTasks.yml
+- hosts: all
+  become: yes
+  tasks:
+    - name: Install OpenJDK 17 and prerequisites (curl, tar,..etc)
+      apt:
+        name:
+          - openjdk-17-jdk
+          - curl
+          - tar
+          - unzip
+          - apt-transport-https
+          - ca-certificates
+          - software-properties-common
+        state: present
+        update_cache: yes
+
