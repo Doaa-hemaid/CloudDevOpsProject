@@ -2,9 +2,9 @@
 - name: Install prerquest PostgreSQL
   apt:
     name:
-      - acl                           # Access control list utilities
-      - python3                       # Python 3
-      - python3-pip                   # Pip for Python 3
+      - acl                          
+      - python3                       
+      - python3-pip                  
       - gnupg
       - python3-psycopg2
     state: present
