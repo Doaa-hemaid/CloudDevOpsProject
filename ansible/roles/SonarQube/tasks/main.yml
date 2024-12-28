@@ -19,7 +19,7 @@
 
 - name: Ensure SonarQube group exists
   group:
-    name: sonarqube
+    name: "{{ sonarqube_group }}"
     state: present
 
 - name: Create system user for SonarQube
