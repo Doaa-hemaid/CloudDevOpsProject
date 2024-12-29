@@ -6,6 +6,12 @@
 **It combines containerization, infrastructure as code, configuration management, and continuous integration/continuous deployment (CI/CD) to deliver a robust, scalable, and automated workflow.**
 
 ## 2. System Architecture
+### 2.1 AWS Provisioning and Configuration Using Terraform and Ansible
+
+![14-Photoroom](https://github.com/user-attachments/assets/6d95b461-c0e8-4a6f-a080-f9f4adebbf2b)
+
+### 2.2 CI/CD Pipeline Architecture with Jenkins and OpenShift
+![diagram-export-12-29-2024-4_19_48-PM](https://github.com/user-attachments/assets/5a78f0e9-7842-4c12-b2e0-30621bdf233b)
 
 ## 3. Key Components
 ### 3.1 Source Code Management
