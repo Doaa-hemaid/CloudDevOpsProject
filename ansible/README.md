@@ -91,7 +91,7 @@ The `masterPlaybook.yml` playbook applies the **Jenkins** role to the master nod
 
 ### 3.3 Slave Node Playbook (`slavePlaybook.yml`)
 
-The `slavePlaybook.yml` playbook applies various roles to the slave node, such as **Docker**, **OpenShift**,  **PostgreSQL**, and **SonarQube**).
+The `slavePlaybook.yml` playbook applies various roles to the slave node, such as **Docker**, **OpenShift**,  **PostgreSQL**, and **SonarQube**.
 
 ```yaml
 - hosts: slave
@@ -100,7 +100,7 @@ The `slavePlaybook.yml` playbook applies various roles to the slave node, such a
      - Docker
      - OpenShift
      - postgresql
-    - SonarQube
+     - SonarQube
 ```
 
 ## Conclusion
